@@ -1,0 +1,61 @@
+{
+ "allow_customization": 1,
+ "charts": [],
+ "creation": "2026-02-28 14:00:00.000000",
+ "docstatus": 0,
+ "doctype": "Workspace",
+ "for_user": "",
+ "hide_custom": 0,
+ "icon": "app-store",
+ "indicator_color": "green",
+ "is_default": 0,
+ "is_standard": 1,
+ "label": "x402 Marketplace",
+ "links": [
+  {
+   "label": "Marketplace Store",
+   "link_type": "Page",
+   "link_to": "marketplace",
+   "type": "Link"
+  },
+  {
+   "label": "Registered Tools",
+   "link_type": "DocType",
+   "link_to": "MCP Tool",
+   "type": "Link"
+  },
+  {
+   "label": "My Wallet",
+   "link_type": "DocType",
+   "link_to": "Workspace Credit",
+   "type": "Link"
+  },
+  {
+   "label": "All Transactions",
+   "link_type": "DocType",
+   "link_to": "Credit Transaction",
+   "type": "Link"
+  }
+ ],
+ "modified": "2026-02-28 14:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Frappe X402",
+ "name": "x402 Marketplace",
+ "owner": "Administrator",
+ "parent_page": "",
+ "public": 1,
+ "roles": [],
+ "sequence_id": 1,
+ "shortcuts": [
+  {
+   "label": "Open Marketplace",
+   "link_to": "marketplace",
+   "type": "Page"
+  },
+  {
+   "label": "Add New Tool",
+   "link_to": "MCP Tool",
+   "type": "DocType"
+  }
+ ]
+}
