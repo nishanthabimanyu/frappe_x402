@@ -1,15 +1,10 @@
 {
- "allow_customization": 1,
  "charts": [],
- "creation": "2026-02-28 14:00:00.000000",
- "docstatus": 0,
+ "content": "[{\"type\":\"header\",\"data\":{\"text\":\"AI Tool Marketplace\",\"level\":2}},{\"type\":\"shortcut\",\"data\":{\"shortcuts\":[{\"label\":\"Open Marketplace\",\"link_to\":\"marketplace\",\"type\":\"Page\",\"icon\":\"app-store\"},{\"label\":\"Add New Tool\",\"link_to\":\"MCP Tool\",\"type\":\"DocType\",\"icon\":\"add\"}]}},{\"type\":\"spacer\",\"data\":{}},{\"type\":\"header\",\"data\":{\"text\":\"Finance & Governance\",\"level\":4}},{\"type\":\"links\",\"data\":{\"links\":[{\"label\":\"My Wallet\",\"link_to\":\"Workspace Credit\",\"type\":\"Link\"},{\"label\":\"Fiat Top-Ups\",\"link_to\":\"Payment Top-Up\",\"type\":\"Link\"},{\"label\":\"All Transactions\",\"link_to\":\"Credit Transaction\",\"type\":\"Link\"},{\"label\":\"Agent Policies\",\"link_to\":\"Agent Config\",\"type\":\"Link\"}]}}]",
+ "creation": "2026-02-28 14:00:00",
  "doctype": "Workspace",
- "for_user": "",
- "hide_custom": 0,
  "icon": "app-store",
  "indicator_color": "green",
- "is_default": 0,
- "is_standard": 1,
  "label": "x402 Marketplace",
  "links": [
   {
@@ -19,75 +14,49 @@
    "type": "Link"
   },
   {
-   "label": "Tools & Providers",
-   "type": "Card",
-   "links": [
-    {
-     "label": "Registered Tools",
-     "link_type": "DocType",
-     "link_to": "MCP Tool",
-     "type": "Link"
-    },
-    {
-     "label": "Tool Providers",
-     "link_type": "DocType",
-     "link_to": "MCP Provider",
-     "type": "Link"
-    }
-   ]
+   "label": "Registered Tools",
+   "link_type": "DocType",
+   "link_to": "MCP Tool",
+   "type": "Link"
   },
   {
-   "label": "Wallet & Finance",
-   "type": "Card",
-   "links": [
-    {
-     "label": "My Wallet",
-     "link_type": "DocType",
-     "link_to": "Workspace Credit",
-     "type": "Link"
-    },
-    {
-     "label": "Fiat Top-Ups",
-     "link_type": "DocType",
-     "link_to": "Payment Top-Up",
-     "type": "Link"
-    },
-    {
-     "label": "Provider Payouts",
-     "link_type": "DocType",
-     "link_to": "Provider Payout",
-     "type": "Link"
-    },
-    {
-     "label": "All Transactions",
-     "link_type": "DocType",
-     "link_to": "Credit Transaction",
-     "type": "Link"
-    }
-   ]
+   "label": "My Wallet",
+   "link_type": "DocType",
+   "link_to": "Workspace Credit",
+   "type": "Link"
   },
   {
-   "label": "Governance",
-   "type": "Card",
-   "links": [
-    {
-     "label": "Agent Policies",
-     "link_type": "DocType",
-     "link_to": "Agent Config",
-     "type": "Link"
-    }
-   ]
+   "label": "All Transactions",
+   "link_type": "DocType",
+   "link_to": "Credit Transaction",
+   "type": "Link"
+  },
+  {
+   "label": "Fiat Top-Ups",
+   "link_type": "DocType",
+   "link_to": "Payment Top-Up",
+   "type": "Link"
+  },
+  {
+   "label": "Agent Policies",
+   "link_type": "DocType",
+   "link_to": "Agent Config",
+   "type": "Link"
   }
  ],
- "modified": "2026-02-28 14:00:00.000000",
+ "modified": "2026-02-28 14:00:00",
  "modified_by": "Administrator",
  "module": "Frappe X402",
  "name": "x402 Marketplace",
- "owner": "Administrator",
- "parent_page": "",
  "public": 1,
- "roles": [],
- "sequence_id": 1,
+ "roles": [
+  {
+   "role": "System Manager"
+  },
+  {
+   "role": "Administrator"
+  }
+ ],
  "shortcuts": [
   {
    "label": "Open Marketplace",
@@ -99,5 +68,6 @@
    "link_to": "MCP Tool",
    "type": "DocType"
   }
- ]
+ ],
+ "title": "x402 Marketplace"
 }
