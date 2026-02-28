@@ -11,9 +11,12 @@ frappe.pages['marketplace'].on_page_load = function(wrapper) {
 				<h3>Available Tools</h3>
 				<p class="text-muted">Discover and call MCP tools instantly.</p>
 			</div>
-			<div id="user-balance" style="text-align: right; background: #fff; padding: 10px 20px; border: 1px solid #d1d8dd; border-radius: 6px;">
-				<div class="text-muted" style="font-size: 12px;">Your Balance</div>
-				<div id="balance-amount" style="font-size: 20px; font-weight: bold; color: #2ecc71;">0.00 Credits</div>
+			<div style="display: flex; align-items: center; gap: 20px;">
+				<button class="btn btn-primary" id="topup-btn">Top Up Credits</button>
+				<div id="user-balance" style="text-align: right; background: #fff; padding: 10px 20px; border: 1px solid #d1d8dd; border-radius: 6px;">
+					<div class="text-muted" style="font-size: 12px;">Your Balance</div>
+					<div id="balance-amount" style="font-size: 20px; font-weight: bold; color: #2ecc71;">0.00 Credits</div>
+				</div>
 			</div>
 		</div>
 		<div id="tools-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px;">
@@ -24,6 +27,85 @@ frappe.pages['marketplace'].on_page_load = function(wrapper) {
 	// Initial Load
 	update_balance();
 	load_tools();
+
+	// Top Up Logic
+	$('#topup-btn').on('click', function() {
+		let d = new frappe.ui.Dialog({
+			title: 'Top Up Credits',
+			fields: [
+				{
+					label: 'Amount (INR)',
+					fieldname: 'amount',
+					fieldtype: 'Currency',
+					reqd: 1,
+					default: 500
+				}
+			],
+			primary_action_label: 'Proceed to Pay',
+			primary_action(values) {
+				d.hide();
+				top_up_balance(values.amount);
+			}
+		});
+		d.show();
+	});
+
+	function top_up_balance(amount) {
+		frappe.call({
+			method: 'frappe_x402.frappe_x402.api.create_topup_order',
+			args: { amount: amount },
+			callback: function(r) {
+				if (r.message) {
+					var options = {
+						"key": "rzp_test_placeholder",
+						"amount": r.message.amount,
+						"currency": "INR",
+						"name": "MCP Marketplace",
+						"description": "Credit Top-up",
+						"order_id": r.message.id,
+						"handler": function (response){
+							verify_payment(response, amount);
+						},
+						"prefill": {
+							"email": frappe.session.user_email
+						},
+						"theme": {
+							"color": "#3399cc"
+						}
+					};
+					
+					// Load Razorpay Script dynamically if not loaded
+					if (typeof Razorpay === 'undefined') {
+						$.getScript('https://checkout.razorpay.com/v1/checkout.js', function() {
+							var rzp1 = new Razorpay(options);
+							rzp1.open();
+						});
+					} else {
+						var rzp1 = new Razorpay(options);
+						rzp1.open();
+					}
+				}
+			}
+		});
+	}
+
+	function verify_payment(response, amount) {
+		frappe.call({
+			method: 'frappe_x402.frappe_x402.api.verify_payment',
+			args: {
+				order_id: response.razorpay_order_id,
+				payment_id: response.razorpay_payment_id,
+				signature: response.razorpay_signature,
+				amount_credits: amount
+			},
+			callback: function(r) {
+				if (r.message && r.message.status === 'success') {
+					frappe.show_alert({message: r.message.message, indicator: 'green'});
+					update_balance();
+				}
+			}
+		});
+	}
 
 	function update_balance() {
 		frappe.db.get_value('Workspace Credit', {user: frappe.session.user}, 'total_balance')

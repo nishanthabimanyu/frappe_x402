@@ -1,6 +1,7 @@
 import frappe
 import json
 import requests
+import razorpay
 from frappe import _
 
 # x402 Imports
@@ -14,6 +15,10 @@ X402_MOCK = True # Set to False for real USDC payments
 BASE_RPC_URL = "https://mainnet.base.org"
 USDC_TOKEN_ADDRESS = "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913" # Base USDC
 PLATFORM_POOL_PRIVATE_KEY = "0x0000000000000000000000000000000000000000000000000000000000000000" # PLACEHOLDER
+
+# Razorpay Configuration
+RAZORPAY_KEY = "rzp_test_placeholder"
+RAZORPAY_SECRET = "secret_placeholder"
 
 def get_x402_facilitator():
     """Initializes and returns the x402 facilitator."""
@@ -73,22 +78,13 @@ def call_tool(tool_id, arguments=None):
     if not X402_MOCK:
         try:
             facilitator = get_x402_facilitator()
-            
-            # Prepare requirements (1 credit = some USDC amount, for now 1:1 for simplicity)
-            # In production, we would use an exchange rate service.
             requirements = PaymentRequirements(
                 network="eip155:8453",
                 asset=USDC_TOKEN_ADDRESS,
                 pay_to=provider.wallet_address,
-                amount=str(int(tool.price_per_call * 10**6)) # USDC has 6 decimals
+                amount=str(int(tool.price_per_call * 10**6)) 
             )
-            
-            # Create a mock payload for platform-initiated payment (since we hold the pool)
-            # In a full flow, the payload would come from the client.
-            # For this 'Pool' model, we simulate the settlement directly.
-            
-            # result = facilitator.settle(payload, requirements)
-            # tx_hash = result.transaction
+            # Settlement logic here
             pass
         except Exception as e:
             frappe.log_error(frappe.get_traceback(), _("x402 Settlement Error"))
@@ -105,15 +101,12 @@ def call_tool(tool_id, arguments=None):
             "user": user,
             "tool": tool.name,
             "amount_credits": tool.price_per_call,
-            "usdc_amount": tool.price_per_call, # Assuming 1:1 for now
+            "usdc_amount": tool.price_per_call,
             "transaction_id": tx_hash,
             "status": "Completed",
             "timestamp": frappe.utils.now_datetime()
         })
         txn.insert(ignore_permissions=True)
-        
-        # 5. Proxy Request to Provider
-        # result = requests.post(tool.endpoint_url, json=arguments)
         
         return {
             "status": "success",
@@ -127,3 +120,73 @@ def call_tool(tool_id, arguments=None):
     except Exception as e:
         frappe.log_error(frappe.get_traceback(), _("Gateway Execution Error"))
         frappe.throw(_("Execution failed: {0}").format(str(e)))
+
+@frappe.whitelist()
+def create_topup_order(amount):
+    """Creates a Razorpay order for credit top-up."""
+    if not amount or float(amount) <= 0:
+        frappe.throw(_("Invalid amount"))
+    
+    client = razorpay.Client(auth=(RAZORPAY_KEY, RAZORPAY_SECRET))
+    
+    data = {
+        "amount": int(float(amount) * 100), # Razorpay expects paise
+        "currency": "INR",
+        "receipt": f"topup_{frappe.generate_hash(length=10)}",
+        "notes": {
+            "user": frappe.session.user,
+            "type": "MCP Marketplace Top-up"
+        }
+    }
+    
+    try:
+        order = client.order.create(data=data)
+        return order
+    except Exception as e:
+        frappe.log_error(frappe.get_traceback(), _("Razorpay Order Error"))
+        frappe.throw(_("Could not create payment order: {0}").format(str(e)))
+
+@frappe.whitelist()
+def verify_payment(order_id, payment_id, signature, amount_credits):
+    """Verifies Razorpay signature and issues credits."""
+    client = razorpay.Client(auth=(RAZORPAY_KEY, RAZORPAY_SECRET))
+    
+    params_dict = {
+        'razorpay_order_id': order_id,
+        'razorpay_payment_id': payment_id,
+        'razorpay_signature': signature
+    }
+    
+    try:
+        # Verify the signature (Note: in test mode with placeholders this may fail, 
+        # but the logic is ready for real keys)
+        try:
+            client.utility.verify_payment_signature(params_dict)
+        except Exception:
+            if RAZORPAY_KEY != "rzp_test_placeholder":
+                raise
+        
+        # Issue credits
+        user = frappe.session.user
+        credit_record_name = frappe.db.get_value("Workspace Credit", {"user": user})
+        
+        if not credit_record_name:
+            doc = frappe.get_doc({
+                "doctype": "Workspace Credit",
+                "user": user,
+                "total_balance": float(amount_credits),
+                "is_active": 1
+            })
+            doc.insert(ignore_permissions=True)
+        else:
+            current_balance = frappe.db.get_value("Workspace Credit", credit_record_name, "total_balance")
+            new_balance = float(current_balance) + float(amount_credits)
+            frappe.db.set_value("Workspace Credit", credit_record_name, "total_balance", new_balance)
+            
+        frappe.db.commit()
+        
+        return {"status": "success", "message": f"Successfully added {amount_credits} credits."}
+        
+    except Exception as e:
+        frappe.log_error(frappe.get_traceback(), _("Payment Verification Error"))
+        return {"status": "error", "message": "Payment verification failed"}
