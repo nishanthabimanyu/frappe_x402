@@ -1,0 +1,106 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "format:TOP-{####}",
+ "creation": "2026-02-28 15:00:00.000000",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "user",
+  "status",
+  "gateway",
+  "column_break_4",
+  "fiat_amount",
+  "currency",
+  "credits_issued",
+  "exchange_rate"
+ ],
+ "fields": [
+  {
+   "fieldname": "user",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "User",
+   "options": "User",
+   "reqd": 1
+  },
+  {
+   "fieldname": "status",
+   "default": "Pending",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Status",
+   "options": "Pending\nCompleted\nFailed"
+  },
+  {
+   "fieldname": "gateway",
+   "fieldtype": "Select",
+   "label": "Gateway",
+   "options": "Razorpay\nStripe"
+  },
+  {
+   "fieldname": "column_break_4",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "fiat_amount",
+   "fieldtype": "Currency",
+   "label": "Fiat Amount",
+   "reqd": 1
+  },
+  {
+   "fieldname": "currency",
+   "default": "INR",
+   "fieldtype": "Data",
+   "label": "Currency"
+  },
+  {
+   "fieldname": "credits_issued",
+   "fieldtype": "Float",
+   "label": "Credits Issued"
+  },
+  {
+   "fieldname": "exchange_rate",
+   "default": "1.0",
+   "fieldtype": "Float",
+   "label": "Exchange Rate"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2026-02-28 15:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Frappe X402",
+ "name": "Payment Top-Up",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Administrator",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}
