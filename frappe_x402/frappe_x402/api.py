@@ -4,12 +4,6 @@ import requests
 import razorpay
 from frappe import _
 
-# x402 Imports
-from x402 import x402FacilitatorSync
-from x402.mechanisms.evm.exact.facilitator import ExactEvmScheme
-from x402.mechanisms.evm.signers import FacilitatorWeb3Signer
-from x402.schemas.payments import PaymentPayload, PaymentRequirements
-
 # Configuration (In production, these should be in a secure DocType or Env Vars)
 X402_MOCK = True # Set to False for real USDC payments
 BASE_RPC_URL = "https://mainnet.base.org"
@@ -22,6 +16,13 @@ RAZORPAY_SECRET = "secret_placeholder"
 
 def get_x402_facilitator():
     """Initializes and returns the x402 facilitator."""
+    try:
+        from x402 import x402FacilitatorSync
+        from x402.mechanisms.evm.exact.facilitator import ExactEvmScheme
+        from x402.mechanisms.evm.signers import FacilitatorWeb3Signer
+    except ImportError:
+        frappe.throw(_("EVM mechanism requires ethereum packages. Install with: pip install \"x402[evm]\""))
+
     signer = FacilitatorWeb3Signer(
         private_key=PLATFORM_POOL_PRIVATE_KEY,
         rpc_url=BASE_RPC_URL
@@ -77,6 +78,7 @@ def call_tool(tool_id, arguments=None):
     
     if not X402_MOCK:
         try:
+            from x402.schemas.payments import PaymentRequirements
             facilitator = get_x402_facilitator()
             requirements = PaymentRequirements(
                 network="eip155:8453",
@@ -86,6 +88,8 @@ def call_tool(tool_id, arguments=None):
             )
             # Settlement logic here
             pass
+        except ImportError:
+            frappe.throw(_("EVM mechanism requires ethereum packages. Install with: pip install \"x402[evm]\""))
         except Exception as e:
             frappe.log_error(frappe.get_traceback(), _("x402 Settlement Error"))
             frappe.throw(_("Blockchain settlement failed: {0}").format(str(e)))
@@ -158,8 +162,6 @@ def verify_payment(order_id, payment_id, signature, amount_credits):
     }
     
     try:
-        # Verify the signature (Note: in test mode with placeholders this may fail, 
-        # but the logic is ready for real keys)
         try:
             client.utility.verify_payment_signature(params_dict)
         except Exception:
