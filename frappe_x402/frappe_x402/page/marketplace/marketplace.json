@@ -1,0 +1,21 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2026-02-28 13:00:00.000000",
+ "doctype": "Page",
+ "modified": "2026-02-28 13:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Frappe X402",
+ "name": "marketplace",
+ "page_name": "marketplace",
+ "roles": [
+  {
+   "role": "System Manager"
+  },
+  {
+   "role": "Administrator"
+  }
+ ],
+ "standard": "Yes",
+ "title": "AI Tool Marketplace"
+}
