@@ -19,22 +19,64 @@
    "type": "Link"
   },
   {
-   "label": "Registered Tools",
-   "link_type": "DocType",
-   "link_to": "MCP Tool",
-   "type": "Link"
+   "label": "Tools & Providers",
+   "type": "Card",
+   "links": [
+    {
+     "label": "Registered Tools",
+     "link_type": "DocType",
+     "link_to": "MCP Tool",
+     "type": "Link"
+    },
+    {
+     "label": "Tool Providers",
+     "link_type": "DocType",
+     "link_to": "MCP Provider",
+     "type": "Link"
+    }
+   ]
   },
   {
-   "label": "My Wallet",
-   "link_type": "DocType",
-   "link_to": "Workspace Credit",
-   "type": "Link"
+   "label": "Wallet & Finance",
+   "type": "Card",
+   "links": [
+    {
+     "label": "My Wallet",
+     "link_type": "DocType",
+     "link_to": "Workspace Credit",
+     "type": "Link"
+    },
+    {
+     "label": "Fiat Top-Ups",
+     "link_type": "DocType",
+     "link_to": "Payment Top-Up",
+     "type": "Link"
+    },
+    {
+     "label": "Provider Payouts",
+     "link_type": "DocType",
+     "link_to": "Provider Payout",
+     "type": "Link"
+    },
+    {
+     "label": "All Transactions",
+     "link_type": "DocType",
+     "link_to": "Credit Transaction",
+     "type": "Link"
+    }
+   ]
   },
   {
-   "label": "All Transactions",
-   "link_type": "DocType",
-   "link_to": "Credit Transaction",
-   "type": "Link"
+   "label": "Governance",
+   "type": "Card",
+   "links": [
+    {
+     "label": "Agent Policies",
+     "link_type": "DocType",
+     "link_to": "Agent Config",
+     "type": "Link"
+    }
+   ]
   }
  ],
  "modified": "2026-02-28 14:00:00.000000",
