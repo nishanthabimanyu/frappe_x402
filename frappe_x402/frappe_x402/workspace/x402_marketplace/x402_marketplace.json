@@ -1,6 +1,6 @@
 {
  "charts": [],
- "content": "[{\"type\":\"header\",\"data\":{\"text\":\"AI Tool Marketplace\",\"level\":2}},{\"type\":\"shortcut\",\"data\":{\"shortcuts\":[{\"label\":\"Open Marketplace\",\"link_to\":\"marketplace\",\"type\":\"Page\",\"icon\":\"app-store\"},{\"label\":\"Add New Tool\",\"link_to\":\"MCP Tool\",\"type\":\"DocType\",\"icon\":\"add\"}]}},{\"type\":\"spacer\",\"data\":{}},{\"type\":\"header\",\"data\":{\"text\":\"Finance & Governance\",\"level\":4}},{\"type\":\"links\",\"data\":{\"links\":[{\"label\":\"My Wallet\",\"link_to\":\"Workspace Credit\",\"type\":\"Link\"},{\"label\":\"Fiat Top-Ups\",\"link_to\":\"Payment Top-Up\",\"type\":\"Link\"},{\"label\":\"All Transactions\",\"link_to\":\"Credit Transaction\",\"type\":\"Link\"},{\"label\":\"Agent Policies\",\"link_to\":\"Agent Config\",\"type\":\"Link\"}]}}]",
+ "content": "[{\"id\":\"h1\",\"type\":\"header\",\"data\":{\"text\":\"AI Tool Marketplace\",\"col\":12}},{\"id\":\"s1\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Open Marketplace\",\"col\":4}},{\"id\":\"s2\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Add New Tool\",\"col\":4}},{\"id\":\"sp1\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"c1\",\"type\":\"card\",\"data\":{\"card_name\":\"Marketplace Data\",\"col\":4}},{\"id\":\"c2\",\"type\":\"card\",\"data\":{\"card_name\":\"Finance & Governance\",\"col\":4}}]",
  "creation": "2026-02-28 14:00:00",
  "doctype": "Workspace",
  "icon": "app-store",
@@ -8,39 +8,49 @@
  "label": "x402 Marketplace",
  "links": [
   {
-   "label": "Marketplace Store",
-   "link_type": "Page",
-   "link_to": "marketplace",
-   "type": "Link"
+   "label": "Marketplace Data",
+   "type": "Card Break",
+   "link_count": 2
   },
   {
    "label": "Registered Tools",
-   "link_type": "DocType",
    "link_to": "MCP Tool",
+   "link_type": "DocType",
    "type": "Link"
+  },
+  {
+   "label": "Tool Providers",
+   "link_to": "MCP Provider",
+   "link_type": "DocType",
+   "type": "Link"
+  },
+  {
+   "label": "Finance & Governance",
+   "type": "Card Break",
+   "link_count": 4
   },
   {
    "label": "My Wallet",
-   "link_type": "DocType",
    "link_to": "Workspace Credit",
-   "type": "Link"
-  },
-  {
-   "label": "All Transactions",
    "link_type": "DocType",
-   "link_to": "Credit Transaction",
    "type": "Link"
   },
   {
    "label": "Fiat Top-Ups",
-   "link_type": "DocType",
    "link_to": "Payment Top-Up",
+   "link_type": "DocType",
+   "type": "Link"
+  },
+  {
+   "label": "All Transactions",
+   "link_to": "Credit Transaction",
+   "link_type": "DocType",
    "type": "Link"
   },
   {
    "label": "Agent Policies",
-   "link_type": "DocType",
    "link_to": "Agent Config",
+   "link_type": "DocType",
    "type": "Link"
   }
  ],
