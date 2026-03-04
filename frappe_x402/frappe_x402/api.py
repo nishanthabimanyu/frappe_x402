@@ -86,15 +86,30 @@ def call_tool(tool_id, arguments=None):
                 pay_to=provider.wallet_address,
                 amount=str(int(tool.price_per_call * 10**6)) 
             )
-            # Settlement logic here
+            # Settlement logic here...
             pass
-        except ImportError:
-            frappe.throw(_("EVM mechanism requires ethereum packages. Install with: pip install \"x402[evm]\""))
         except Exception as e:
             frappe.log_error(frappe.get_traceback(), _("x402 Settlement Error"))
             frappe.throw(_("Blockchain settlement failed: {0}").format(str(e)))
 
-    # 4. Atomically Deduct Credits & Create Transaction Record
+    # 4. Proxy Request to Provider (The Real Forwarding)
+    tool_response = None
+    try:
+        # We forward the arguments provided by the AI Agent to the tool URL
+        # For security, we add a signature/header in Phase 2
+        payload = {"arguments": arguments or {}}
+        resp = requests.post(tool.endpoint_url, json=payload, timeout=10)
+        
+        if resp.status_code == 200:
+            tool_response = resp.json()
+        else:
+            frappe.throw(_("Provider returned error {0}: {1}").format(resp.status_code, resp.text))
+            
+    except Exception as e:
+        frappe.log_error(frappe.get_traceback(), _("Provider Connection Error"))
+        frappe.throw(_("Could not connect to tool provider at {0}: {1}").format(tool.endpoint_url, str(e)))
+
+    # 5. Atomically Deduct Credits & Create Transaction Record
     try:
         new_balance = credit_record.total_balance - tool.price_per_call
         frappe.db.set_value("Workspace Credit", credit_record.name, "total_balance", new_balance)
@@ -118,7 +133,7 @@ def call_tool(tool_id, arguments=None):
             "credits_deducted": tool.price_per_call,
             "remaining_balance": new_balance,
             "transaction_id": tx_hash,
-            "response": f"Call to {tool.tool_name} successful via x402."
+            "response": tool_response
         }
 
     except Exception as e:
@@ -134,7 +149,7 @@ def create_topup_order(amount):
     client = razorpay.Client(auth=(RAZORPAY_KEY, RAZORPAY_SECRET))
     
     data = {
-        "amount": int(float(amount) * 100), # Razorpay expects paise
+        "amount": int(float(amount) * 100), 
         "currency": "INR",
         "receipt": f"topup_{frappe.generate_hash(length=10)}",
         "notes": {
@@ -168,7 +183,6 @@ def verify_payment(order_id, payment_id, signature, amount_credits):
             if RAZORPAY_KEY != "rzp_test_placeholder":
                 raise
         
-        # Issue credits
         user = frappe.session.user
         credit_record_name = frappe.db.get_value("Workspace Credit", {"user": user})
         
