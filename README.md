@@ -14,6 +14,31 @@ frappe_x402 provides a robust marketplace and monetization layer for AI tools. I
 - **Autonomous Governance:** Granular control over AI agent behavior through daily spending limits and tool whitelisting.
 - **Unified Ledger:** A persistent audit trail of all tool invocations, credit deductions, and on-chain transaction hashes.
 
+## Project Development Checkpoints
+
+The following milestones have been achieved in the current implementation:
+
+- **Phase 1: Foundation**
+    - [x] Application scaffolding and workspace initialization.
+    - [x] Implementation of core DocTypes: MCP Provider, MCP Tool, Workspace Credit, Credit Transaction.
+    - [x] Database migration and multi-tenant schema verification.
+
+- **Phase 2: Economic Gateway**
+    - [x] Development of the Economic Interceptor middleware.
+    - [x] Integration of x402 protocol for USDC settlement (Base Mainnet ready).
+    - [x] Implementation of Razorpay fiat-to-credit bridge.
+    - [x] Authenticated API access via Frappe Key/Secret system.
+
+- **Phase 3: User Interface**
+    - [x] Design and implementation of the Marketplace "App Store" UI.
+    - [x] Deployment of the x402 Marketplace Workspace (Frappe v15 compatible).
+    - [x] Real-time credit balance tracking and transaction audit logs.
+
+- **Phase 4: Operational Reality (Current)**
+    - [x] Integration of real-world tool providers (Web Search, English Dictionary, Crypto Prices).
+    - [x] Verification of the end-to-end "Agentic Transaction" loop via `demo_agent.py`.
+    - [x] Robust error handling and automated system vitality checks.
+
 ## Technical Architecture
 
 The system operates as a managed economic proxy:
